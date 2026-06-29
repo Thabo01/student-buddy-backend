@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: student-buddy
+
+  # ----- Database (development) -----
+  # Values come from environment variables so we never hard-code secrets.
+  # Defaults are provided for a typical local MySQL install.
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:student_buddy}?createDatabaseIfNotExist=true&serverTimezone=UTC
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:root}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      # 'update' is convenient while developing; switch to 'validate' once
+      # the schema (and stored procedures) are managed by SQL scripts.
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+
+server:
+  port: ${SERVER_PORT:8080}
+
+# ----- Application-specific settings -----
+app:
+  jwt:
+    # IMPORTANT: override this in every real environment via the JWT_SECRET env var.
+    # Must be a long, random, Base64-ish string (>= 256 bits for HS256).
+    secret: ${JWT_SECRET:change-me-in-prod-this-is-a-dev-only-placeholder-secret-key-1234567890}
+    # Token lifetime in milliseconds (default: 24 hours)
+    expiration-ms: ${JWT_EXPIRATION_MS:86400000}
+
+logging:
+  level:
+    com.studentbuddy: DEBUG
