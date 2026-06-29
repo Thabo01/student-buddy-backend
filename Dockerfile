@@ -27,4 +27,10 @@ EXPOSE 8080
 
 # Activate the production profile by default; everything else comes from env vars.
 ENV SPRING_PROFILES_ACTIVE=prod
-ENTRYPOINT ["java", "-jar", "app.jar"]
+
+# Keep heap small enough for Render's free 512 MB container.
+ENTRYPOINT ["java", \
+  "-Xms128m", "-Xmx400m", \
+  "-XX:+UseContainerSupport", \
+  "-XX:MaxRAMPercentage=75.0", \
+  "-jar", "app.jar"]
